@@ -1,11 +1,11 @@
 package com.pra.retrofit_db.model.response
 
 import com.google.gson.annotations.SerializedName
-import com.pra.retrofit_db.model.user.Result
+import com.pra.retrofit_db.model.user.User
 
 
 data class UserResponseModel(
 
     @SerializedName("results")
-    var results: List<Result>
+    var users: List<User>
 )

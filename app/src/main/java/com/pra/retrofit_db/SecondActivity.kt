@@ -1,7 +1,6 @@
 package com.pra.retrofit_db
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -21,7 +20,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), OnItemClickListener {
+class SecondActivity : AppCompatActivity(), OnItemClickListener {
 
     private lateinit var mBinding: ActivityMainBinding
     private var mUserAdapter: UserAdapter? = null
@@ -58,7 +57,27 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         db = getApplicationDb()
-        getUserAPiCalling()
+
+        runBlocking {
+         /*   val jobDeleteAll = launch {
+                db.userDaO().deleteAllUser()
+            }
+            jobDeleteAll.join()
+            val savedDeferred = launch {
+                db.userDaO().saveUser(randomUserApiResponse?.users!!)
+            }
+            savedDeferred.join()*/
+            val deferred = async {
+                db.userDaO().getAllUser()
+            }
+            val resu = deferred.await()
+
+            mListUser.clear()
+            mListUser.addAll(resu)
+            setAdapter()
+        }
+
+        //  getUserAPiCalling()
         //  getData()
         //    mUserAdapter = UserAdapter(mListUser, this)
         //   mBinding.rvUsers.adapter = mUserAdapter
@@ -66,7 +85,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     public fun getApplicationDb(): AppDataBase {
         //if (db == null) {
-        db = AppDataBase.getDatabase(this)
+            db = AppDataBase.getDatabase(this)
 
         return db!!
     }
@@ -94,6 +113,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     response.isSuccessful -> {
                         if (response.body() != null) {
                             val randomUserApiResponse = response.body()
+
+
+                            //  val list =MyApp.getMyApp().getApplicationDb().userDaO().getAllUser()
                             runBlocking {
                                 val jobDeleteAll = launch {
                                     db.userDaO().deleteAllUser()
@@ -117,7 +139,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                             // setAdapter()
                         } else {
                             Toast.makeText(
-                                this@MainActivity,
+                                this@SecondActivity,
                                 "" + response.errorBody().toString(),
                                 Toast.LENGTH_SHORT
                             ).show();
@@ -125,13 +147,13 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     }
                     response.errorBody() != null ->
                         Toast.makeText(
-                            this@MainActivity,
+                            this@SecondActivity,
                             "" + response.errorBody().toString(),
                             Toast.LENGTH_SHORT
                         ).show();
                     else ->
                         Toast.makeText(
-                            this@MainActivity,
+                            this@SecondActivity,
                             "Something went wrong",
                             Toast.LENGTH_SHORT
                         ).show();
@@ -139,14 +161,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             }
 
             override fun onFailure(call: Call<UserResponseModel>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "" + t.message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this@SecondActivity, "" + t.message, Toast.LENGTH_SHORT).show();
             }
         })
     }
 
     override fun onItemClick(position: Int) {
-        val intent = Intent(this, SecondActivity::class.java)
-        startActivity(intent)
+        Toast.makeText(this,"Click",Toast.LENGTH_SHORT).show()
     }
+
 
 }

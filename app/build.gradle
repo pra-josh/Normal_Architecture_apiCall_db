@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.pra.retrofit_db"
         minSdk 21
-        targetSdk 32
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -36,8 +37,15 @@ android {
 }
 
 def retrofit_version= "2.9.0"
+def roomVersion = "2.4.2"
 
 dependencies {
+    // room
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -45,9 +53,13 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
 
-
-     // piccaso
+     // Piccaso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Kotlin Coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
+
 
 
     implementation 'androidx.core:core-ktx:1.7.0'
